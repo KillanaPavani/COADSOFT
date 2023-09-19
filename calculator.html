@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1.0">
+<title>BASIC CALCULATOR</title>
+<style>
+  body{
+    font-family:Arial, sans-serif;
+    margin:0;
+    padding:0;
+  }
+#calculator{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 300px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(190, 201, 200, 0.1);
+  }
+  #result{
+    grid-column: span 4;
+    text-align: right;
+    padding: 10px;
+    font-size: 24px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  button{
+    padding: 15px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  button:hover {
+    background-color: #3ea729;
+  }
+</style>
+</head>
+<body>
+  <div id="calculator">
+    <div id="result">0</div>
+    <button id="clear">C</button>
+    <button id="backspace">←</button>
+    <button id="divide">/</button>
+    <button id="7">7</button>
+    <button id="8">8</button>
+    <button id="9">9</button>
+    <button id="multiply">*</button>
+    <button id="4">4</button>
+    <button id="5">5</button>
+    <button id="6">6</button>
+    <button id="subtract">-</button>
+    <button id="1">1</button>
+    <button id="2">2</button>
+    <button id="3">3</button>
+    <button id="add">+</button>
+    <button id="0">0</button>
+    <button id="decimal">.</button>
+    <button id="calculate">=</button>
+  </div>
+  <script>
+    const result = document.getElementById('result');
+    const buttons = document.querySelectorAll('button');
+    let currentInput = '';
+    let firstOperand = null;
+    let operator = null;
+    buttons.forEach(button => {
+      button.addEventListener('click', () => handleButtonClick(button.innerText));
+    });
+    function handleButtonClick(value) {
+      if (value >='0' && value <= '9') {
+        currentInput += value;
+      } else if (value === '.' && !currentInput.includes('.')) {
+        currentInput += value;
+      } else if (value === 'C') {
+        clear();
+      } else if (value === '←') {
+        backspace();
+      } else if (value === '+' || value === '-' || value === '*' || value === '/') {
+        handleOperator(value);
+      } else if (value === '=') {
+        calculate();
+      }
+    updateDisplay();
+    }
+    function clear() {
+      currentInput = '';
+      firstOperand = null;
+      operator = null;
+    }
+    function backspace() {
+      currentInput = currentInput.slice(0, -1);
+    }
+    function handleOperator(op) {
+      if (firstOperand === null) {
+        firstOperand = parseFloat(currentInput);
+        operator = op;
+        currentInput = '';
+      }
+    }
+    function calculate() {
+      if (operator && currentInput !== '') {
+        const secondOperand = parseFloat(currentInput);
+        switch (operator) {
+          case '+':
+            currentInput = (firstOperand + secondOperand).toString();
+            break;
+          case '-':
+            currentInput = (firstOperand - secondOperand).toString();
+            break;
+          case '*':
+            currentInput = (firstOperand * secondOperand).toString();
+            break;
+          case '/':
+            currentInput = (firstOperand / secondOperand).toString();
+            break;
+        }
+        firstOperand = null;
+        operator = null;
+      }
+    }
+    function updateDisplay() {
+      result.innerText = currentInput || '0';
+    }
+  </script>
+</body>
+</html>
+
